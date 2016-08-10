@@ -23,7 +23,7 @@ def send_command(remote_conn,cmd):
 def login(remote_conn,username,password):
    if remote_conn==None:
       return ''
-   output = remote_conn.read_until('sername:',TELNET_TIMEOUT)
+   index,match_object,output = remote_conn.expect([r'[uU]sername:',r'[lL]ogin:'],TELNET_TIMEOUT)
    remote_conn.write(username + '\n')
    if password:
       output += remote_conn.read_until('ssword:',TELNET_TIMEOUT)
@@ -40,6 +40,7 @@ if __name__=="__main__":
    except socket.timeout:
       print "Connection timedout"
       remote_conn=None
+
    print login(remote_conn,username,password)
    time.sleep(1)
 
