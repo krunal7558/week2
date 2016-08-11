@@ -19,6 +19,7 @@ class TN(telnetlib.Telnet):
         self.TELNET_PORT = TELNET_PORT
         self.TELNET_TIMEOUT = TELNET_TIMEOUT
         self.ip_addr = ip_addr
+        telnetlib.Telnet(self.ip_addr, self.TELNET_PORT, self.TELNET_TIMEOUT)
 
     def __enter__(self):
         try:
