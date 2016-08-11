@@ -1,6 +1,6 @@
-#!/usr/bin/env python
 
-from telnetlib
+#!/usr/bin/env python
+import telnetlib
 import time
 from getpass import getpass
 import socket
@@ -12,11 +12,17 @@ COMMAND = ('show ip interface brief',)
 TELNET_PORT = 23
 TELNET_TIMEOUT = 6
 
-class TN(Telnet):
+class TN(telnetlib.Telnet):
 
-    def __init__(self,ip_addr, TELNET_PORT=23, TELNET_TIMEOUT=6):
+    def __init__(self, ip_addr, TELNET_PORT=23, TELNET_TIMEOUT=6):
+        '''' constructor to initialise variables'''
+        self.TELNET_PORT = TELNET_PORT
+        self.TELNET_TIMEOUT = TELNET_TIMEOUT
+        self.ip_addr = ip_addr
+
+    def __enter__(self):
         try:
-            return telnetlib.Telnet(ip_addr, TELNET_PORT, TELNET_TIMEOUT)
+            return telnetlib.Telnet(self.ip_addr, self.TELNET_PORT, self.TELNET_TIMEOUT)
         except socket.timeout:
             sys.exit("Connection timed-out")
 
@@ -36,8 +42,10 @@ class TN(Telnet):
         time.sleep(1)
         return self.read_very_eager()
 
+    def __exit__(self, ip_addr, TELNET_PORT=23, TELNET_TIMEOUT=6):
+        self.close()
+
     def __del__(self):
-        '''desctructor to close telnet session.'''
         self.close()
 
 if __name__ == "__main__":
